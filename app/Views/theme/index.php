@@ -1,4 +1,6 @@
 <?= view('App\Views\theme\header') ?>
+
+    <div class="container-fluid" style="background-color: #d9d9d9;">
      <?php if (!empty($profile)): ?>
        <!-- Main content -->
                <div class="row mt-3">
@@ -117,7 +119,7 @@
                    <div class="card">
                      <div class="card-body p-2">
                        <a href="<?= base_url(). 'visits' . '/'?><?= $visit_id != 0 ? 'end/' . $visit_id .'/'. $profile[0]['id'] : 'start/' . $profile[0]['id']?> " class="text-white">
-                        <?= $visit_id != 0 ? ' <button type="button" class="btn btn-danger btn-md" style=""><i class="fas fa-sign-out-alt"></i> End Session</button>': ' <button type="button" class="btn btn-info btn-md" style=""><i class="fas fa-clipboard"></i> Start to take Health Declaration Form</button>'?>
+                        <?= $visit_id != 0 ? ' <button type="button" class="btn btn-danger btn-md" style=""><i class="fas fa-power-off"></i> End Session</button>': ' <button type="button" class="btn btn-info btn-md" style=""><i class="fas fa-clipboard"></i> Start to take Health Declaration Form</button>'?>
                        </a>
                        <?php if ($visit_id != 0): ?>
                          <a href="<?=base_url(). 'checklists/capture/' . $profile[0]['id']?>" class="text-white" <?=$checklist_recorded == 0 ? '': 'style="pointer-events: none"'?>>
