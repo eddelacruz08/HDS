@@ -1,14 +1,16 @@
     </div>
   </div>
+</div>
 <!-- /.content-wrapper -->
-<footer class="main-footer noPrint" id="print-btn">
-  <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
-  All rights reserved.
-  <div class="float-right d-none d-sm-inline-block noPrint">
-    <b>Version</b> 3.0.3
+<footer class="main-footer">
+  <strong>All Right Reserved &copy; 2020-2021 <a href="http://adminlte.io">United Coders Dev Team 2020</a>.</strong>
+  
+  <div class="float-right d-none d-sm-inline-block">
+    <b>Version</b> 1.0.0
   </div>
 </footer>
 
+</div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <!-- <script src="<?= base_url() ?>/public/js/jquery-3.3.1.slim.min.js"></script> -->
@@ -19,15 +21,6 @@
     <script src="<?= base_url() ?>public/js/moment.min.js"></script>
     <script src="<?= base_url() ?>public/plugins/daterangepicker/daterangepicker.js"></script>
     <script src="<?= base_url() ?>public/plugins/moment/moment-with-locales.js"></script>
-    <script src="<?= base_url() ?>public/plugins/select2/js/select2.full.min.js"></script>
-    <script>
-      $(function () {
-        //Initialize Select2 Elements
-        $('.select2bs4').select2({
-          theme: 'bootstrap4'
-        })
-      })
-    </script>
     <script type="text/javascript">
       var baseURL = "<?php echo base_url(); ?>";
     </script>
@@ -125,39 +118,27 @@
     <script src="<?= base_url() ?>public/js/select2.full.min.js"></script>
     <script src="<?= base_url() ?>public/js/myJavascript.js"></script>
     <script src="<?= base_url() ?>public/js/user_profile.js"></script>
-    <script src="<?= base_url() ?>public/js/loader.js"></script>
 
-    <!-- <script>
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawVisualization);
-      function drawVisualization(){
-        var data = google.visualization.arrayToDataTable([
-          ['Month', 'Student', 'Faculty', 'Employee', 'Outsider',],
-          ['Jan', 32, 34, 47,34],
-          ['Feb', 55, 32, 59,34],
-          ['Mar', 99, 33, 67,32],
-          ['Apr', 92, 36, 40,34],
-          ['May', 32, 34, 77,34],
-          ['Jun', 5, 32, 69,34],
-          ['Jul', 39, 33, 27,32],
-          ['Aug', 32, 36, 60,34],
-          ['Sept', 52, 34, 17,34],
-          ['Oct', 85, 32, 69,34],
-          ['Nov', 39, 33, 37,32],
-          ['Dec', 22, 36, 60,34],
-        ]);
-        var options = {
-          title : 'Monthly coffee production by country for 5 months',
-          vAxis: {title:'Guests'},
-          hAxis: {title:'Month'},
-          seriesType:'lines',
-          series:{S:{type:'lines'}}
-        };
-        var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-      }
-    </script> -->
+    <script type="text/javascript">
+    $(function() {
 
+    $('input[name="datefilter"]').daterangepicker({
+        autoUpdateInput: false,
+        locale: {
+            cancelLabel: 'Clear'
+        }
+    });
+
+    $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    });
+
+    $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+    });
+
+    });
+    </script>
     <script>
     $(document).ready(function(){
       $('input[type="radio"]').click(function(){
@@ -182,6 +163,77 @@
         $(document).ready(function() {
             $('.js-example-basic-multiple').select2();
         });
+        <?php if (isset($health_summary)): ?>
+        var timeFormat = 'MM/DD/YYYY HH:mm';
+        function newDate(days) {
+          return moment().add(days, 'd').toDate();
+        }
+
+        function newDateString(days) {
+          return moment().add(days, 'd').format(timeFormat);
+        }
+        var color = Chart.helpers.color;
+        var config = {
+          type: 'line',
+          data: {
+            labels: [
+              <?php
+              foreach ($health_summary as $summary) {
+                ?>
+                  new Date(<?php echo date(strtotime($summary['created_at'])) ?>*1000),
+                <?php
+              }
+              ?>
+            ],
+            datasets: [{
+              label: 'Temperature',
+              backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+              borderColor: window.chartColors.red,
+              fill: false,
+              data: [
+                <?php
+                  foreach ($health_summary as $summary) {
+                    echo $summary['temperature'] . ',';
+                  }
+                ?>
+              ],
+            }]
+          },
+          options: {
+            title: {
+              text: 'Chart.js Time Scale'
+            },
+            scales: {
+              xAxes: [{
+                type: 'time',
+                time: {
+                  parser: timeFormat,
+                  // round: 'day'
+                  tooltipFormat: 'll HH:mm'
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Date'
+                }
+              }],
+              yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'value'
+                }
+              }]
+            },
+          }
+        };
+
+        window.onload = function() {
+          // alert(newDate(1));
+          // alert(newDate(0));
+          var ctx = document.getElementById('canvas').getContext('2d');
+          window.myLine = new Chart(ctx, config);
+
+        };
+        <?php endif; ?>
 
         $(document).ready(function() {
             $('.index-table').DataTable({
